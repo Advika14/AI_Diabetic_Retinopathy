@@ -70,7 +70,7 @@ def train_model_pipeline(model, train_loader, val_loader, num_epochs=15, lr=1e-4
         criterion = nn.CrossEntropyLoss()
 
     optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-4)
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2)
 
     best_val_loss = float('inf')
     history = {
