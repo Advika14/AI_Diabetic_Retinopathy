@@ -39,25 +39,28 @@ class DRTwoStagePipeline:
         self.stage1_model = build_stage1_model(pretrained=False).to(self.device)
         self.stage2_model = build_stage2_model(pretrained=False).to(self.device)
 
-        self.stage1_loaded = False
-        self.stage2_loaded = False
+        # Auto-detect weight paths (checks models/ directory and root directory)
+        s1_candidate_paths = [stage1_weights_path, os.path.join("models", "stage1_binary.pth"), "stage1_binary.pth"]
+        for path in s1_candidate_paths:
+            if path and os.path.exists(path):
+                try:
+                    self.stage1_model.load_state_dict(torch.load(path, map_location=self.device))
+                    self.stage1_loaded = True
+                    print(f"Loaded Stage 1 weights from: {path}")
+                    break
+                except Exception as e:
+                    print(f"Warning: Could not load Stage 1 weights from {path}: {e}")
 
-        # Load weights if provided and existing
-        if stage1_weights_path and os.path.exists(stage1_weights_path):
-            try:
-                self.stage1_model.load_state_dict(torch.load(stage1_weights_path, map_location=self.device))
-                self.stage1_loaded = True
-            except Exception as e:
-                print(f"Warning: Could not load Stage 1 weights: {e}")
-
-        if stage2_weights_path and os.path.exists(stage2_weights_path):
-            try:
-                self.stage2_model.load_state_dict(torch.load(stage2_weights_path, map_location=self.device))
-                self.stage2_loaded = True
-            except Exception as e:
-                print(f"Warning: Could not load Stage 2 weights: {e}")
-
-        self.stage1_model.eval()
+        s2_candidate_paths = [stage2_weights_path, os.path.join("models", "stage2_severity.pth"), "stage2_severity.pth"]
+        for path in s2_candidate_paths:
+            if path and os.path.exists(path):
+                try:
+                    self.stage2_model.load_state_dict(torch.load(path, map_location=self.device))
+                    self.stage2_loaded = True
+                    print(f"Loaded Stage 2 weights from: {path}")
+                    break
+                except Exception as e:
+                    print(f"Warning: Could not load Stage 2 weights from {path}: {e}")
         self.stage2_model.eval()
         self.transform = get_pytorch_transforms(img_size=224, is_train=False)
 
