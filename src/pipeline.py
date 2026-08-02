@@ -39,6 +39,9 @@ class DRTwoStagePipeline:
         self.stage1_model = build_stage1_model(pretrained=False).to(self.device)
         self.stage2_model = build_stage2_model(pretrained=False).to(self.device)
 
+        self.stage1_loaded = False
+        self.stage2_loaded = False
+
         # Auto-detect weight paths (checks models/ directory and root directory)
         s1_candidate_paths = [stage1_weights_path, os.path.join("models", "stage1_binary.pth"), "stage1_binary.pth"]
         for path in s1_candidate_paths:
