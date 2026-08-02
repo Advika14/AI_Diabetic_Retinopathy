@@ -132,11 +132,11 @@ if uploaded_file is not None:
     
     with col_orig:
         st.markdown("**Original Fundus Photograph**")
-        st.image(raw_image, use_column_width=True)
+        st.image(raw_image, use_container_width=True)
 
     with col_clahe:
         st.markdown("**CLAHE Enhanced (Green/L-Channel Contrast)**")
-        st.image(results["clahe_image_np"], use_column_width=True)
+        st.image(results["clahe_image_np"], use_container_width=True)
 
     st.divider()
 
